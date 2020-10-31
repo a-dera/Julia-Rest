@@ -3,8 +3,8 @@
 
 ## Installation 
 
-* Vous devez  [https://julialang.org/downloads/](installer Julia) sur votre machine au préalable pour tester l'API.
-* Installez ensite les dependences en éxécutant les commandes suivantes
+* Vous devez [installer Julia](https://julialang.org/downloads/) sur votre machine au préalable pour tester l'API.
+* Installez ensuite les dependences en éxécutant les commandes suivantes
     ```bash
     julia
     julia> Pkg.add("HttpServer")
@@ -12,11 +12,11 @@
     julia> Pkg.add("HttpCommon")
     julia> Pkg.add("JSON")
     ```
-# Setting up the database
-Run the content of **database.sql** in your MySQL manager.
-# Starting the server
-Inside the API folder, just run:
-```bash
-julia main.jl
-```
-And then, the server will be running at **localhost:8000**.
+* Run the content of **database.sql** in your MySQL manager.
+## Demarrez le serveur
+* Exécuter la commande suivante au sein du dossier principal:
+    ```bash
+    julia main.jl
+    ```
+<br>
+Consulter à l'adresse **localhost:8000**  sur votre navigateur.
