@@ -1,0 +1,9 @@
+CREATE DATABASE julia_test;
+
+USE julia_test;
+
+CREATE TABLE posts (
+id INT NOT NULL AUTO_INCREMENT,
+title VARCHAR(100) NOT NULL,
+content VARCHAR(255) NOT NULL,
+PRIMARY KEY(id));
