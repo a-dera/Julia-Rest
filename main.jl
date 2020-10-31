@@ -35,6 +35,7 @@ handler = HttpHandler() do req::Request, res::Response
         end
         # méthode POST, ajout un post à la base de donnée
         if req.method == "POST"
+            # TODO #1 Récuperer automatiquement la date
             mysql_execute(conn, "INSERT INTO posts (titre, description, date_publication) VALUES ('$(requestData["titre"])', '$(requestData["description"])', '$(requestData["date_publication"])')")
             result = mysql_execute(conn, "SELECT * FROM posts WHERE id=$(mysql_insert_id(conn))", opformat=MYSQL_TUPLES)
             responseData = Post(result[1][1], result[1][2], result[1][3])
@@ -52,7 +53,7 @@ handler = HttpHandler() do req::Request, res::Response
             end
         end
         if req.method == "PUT"
-            rowsAffected = mysql_execute(conn, "UPDATE posts SET titre='$(requestData["titre"])', description='$(requestData["description"])' WHERE id=$id")
+            rowsAffected = mysql_execute(conn, "UPDATE posts SET titre='$(requestData["titre"])', description='$(requestData["description"])', date_publication='$(requestData["date_publication"])' WHERE id=$id")
             if rowsAffected == 1
                 result = mysql_execute(conn, "SELECT * FROM posts WHERE id=$id", opformat=MYSQL_TUPLES)
                 responseData = Post(result[1][1], result[1][2], result[1][3])
