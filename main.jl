@@ -1,8 +1,10 @@
+# Importations
 using HttpServer
 using MySQL
 import HttpCommon
 import JSON
 
+# Structure de type post 
 type Post
     id::Int32
     titre::String
@@ -10,8 +12,10 @@ type Post
     date_publication::DateTime
 end
 
+#connexion à la base de données
 conn = mysql_connect("localhost", "root", "", "julia_rest")
 
+#Handler 
 handler = HttpHandler() do req::Request, res::Response
     responseHeaders = HttpCommon.headers()
     responseHeaders["Access-Control-Allow-Origin"] = "*"
@@ -21,6 +25,7 @@ handler = HttpHandler() do req::Request, res::Response
         requestData = JSON.parse(String(req.data))
     end
     if req.resource == "/posts"
+        # methode GET, retourne tous les posts disponibles
         if req.method == "GET"
             posts = Post[]
             for row in MySQLRowIterator(conn, "SELECT * FROM posts")
@@ -28,8 +33,9 @@ handler = HttpHandler() do req::Request, res::Response
             end
             responseData = posts
         end
+        # méthode POST, ajout un post à la base de donnée
         if req.method == "POST"
-            mysql_execute(conn, "INSERT INTO posts (title, content) VALUES ('$(requestData["title"])', '$(requestData["content"])')")
+            mysql_execute(conn, "INSERT INTO posts (titre, description, date_publication) VALUES ('$(requestData["titre"])', '$(requestData["description"])', '$(requestData["date_publication"])')")
             result = mysql_execute(conn, "SELECT * FROM posts WHERE id=$(mysql_insert_id(conn))", opformat=MYSQL_TUPLES)
             responseData = Post(result[1][1], result[1][2], result[1][3])
         end
@@ -41,17 +47,17 @@ handler = HttpHandler() do req::Request, res::Response
             if length(result) == 1
                 responseData = Post(result[1][1], result[1][2], result[1][3])
             else
-                responseData = "Post not found"
+                responseData = "Post non trouvé"
                 responseStatus = 404
             end
         end
         if req.method == "PUT"
-            rowsAffected = mysql_execute(conn, "UPDATE posts SET title='$(requestData["title"])', content='$(requestData["content"])' WHERE id=$id")
+            rowsAffected = mysql_execute(conn, "UPDATE posts SET titre='$(requestData["titre"])', description='$(requestData["description"])' WHERE id=$id")
             if rowsAffected == 1
                 result = mysql_execute(conn, "SELECT * FROM posts WHERE id=$id", opformat=MYSQL_TUPLES)
                 responseData = Post(result[1][1], result[1][2], result[1][3])
             else
-                responseData = "Post not found"
+                responseData = "Post non trouvé"
                 responseStatus = 404
             end
         end
@@ -64,7 +70,7 @@ handler = HttpHandler() do req::Request, res::Response
                 end
                 responseData = posts
             else
-                responseData = "Post not found"
+                responseData = "Post non trouvé"
                 responseStatus = 404
             end
         end
@@ -72,7 +78,7 @@ handler = HttpHandler() do req::Request, res::Response
     try
         responseData
     catch
-        responseData = "Not found"
+        responseData = "Non trouvé"
         responseStatus = 404
     end
     Response(responseStatus, responseHeaders, JSON.json(responseData))
