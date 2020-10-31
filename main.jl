@@ -5,11 +5,12 @@ import JSON
 
 type Post
     id::Int32
-    title::String
-    content::String
+    titre::String
+    description::String
+    date_publication::DateTime
 end
 
-conn = mysql_connect("localhost", "root", "", "julia_test")
+conn = mysql_connect("localhost", "root", "", "julia_rest")
 
 handler = HttpHandler() do req::Request, res::Response
     responseHeaders = HttpCommon.headers()
