@@ -5,7 +5,7 @@ import HttpCommon
 import JSON
 
 # Structure de type post 
-type Post
+struct Post
     id::Int32
     titre::String
     description::String
